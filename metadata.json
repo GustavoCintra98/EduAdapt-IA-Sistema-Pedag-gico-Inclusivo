@@ -1,0 +1,6 @@
+{
+  "name": "EduAdapt IA - Sistema Pedagógico Inclusivo",
+  "description": "Plataforma de gestão pedagógica inclusiva com Passaporte Pedagógico, PEI, atividades adaptativas DUA parametrizadas por IA com explicabilidade, acompanhamento contínuo e conformidade LGPD.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
