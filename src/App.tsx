@@ -15,6 +15,7 @@ import {
   INITIAL_ACTIVITIES 
 } from './mockData';
 import { Header } from './components/Header';
+import { Sidebar } from './components/Sidebar';
 import { Dashboard } from './components/Dashboard';
 import { AuthModals } from './components/AuthModals';
 import { StudentRegisterModal } from './components/StudentRegisterModal';
@@ -36,6 +37,9 @@ export default function App() {
 
   // Usuário autenticado (Inicia logado como Professor para validação imediata dos requisitos)
   const [currentUser, setCurrentUser] = useState<User | null>(INITIAL_USERS[1]);
+
+  // Controle da barra lateral retrátil (ao clicar abre, ao clicar novamente recolhe)
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
   // Navegação por abas
   const [activeTab, setActiveTab] = useState<string>('dashboard');
@@ -309,7 +313,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans transition-colors">
-      {/* Header com Top Bar Contract e Acessibilidade WCAG */}
+      {/* Header com Top Bar Contract, botão do Menu e Acessibilidade WCAG */}
       <Header
         currentUser={currentUser}
         onLogout={handleLogout}
@@ -320,7 +324,23 @@ export default function App() {
         accessibility={accessibility}
         setAccessibility={setAccessibility}
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        isSidebarOpen={isSidebarOpen}
+        onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+      />
+
+      {/* Barra Lateral Retrátil com todas as opções do sistema */}
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onToggle={() => setIsSidebarOpen((prev) => !prev)}
+        onClose={() => setIsSidebarOpen(false)}
+        activeTab={activeTab}
+        onSelectTab={setActiveTab}
+        currentUser={currentUser}
+        onLogout={handleLogout}
+        onOpenLogin={() => {
+          setAuthModalMode('login');
+          setIsAuthModalOpen(true);
+        }}
       />
 
       {/* Conteúdo Principal da Aplicação */}

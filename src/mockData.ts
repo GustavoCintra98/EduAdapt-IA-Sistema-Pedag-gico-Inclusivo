@@ -54,6 +54,8 @@ export const INITIAL_STUDENTS: Student[] = [
     cpf: '567.890.123-44',
     age: 8,
     className: '3º Ano A - Fundamental I',
+    shift: 'Manhã',
+    room: 'Sala 102 - Bloco A',
     skills: [
       'Excelente memória visual e espacial',
       'Compreensão rápida com ilustrações e esquemas',
@@ -109,7 +111,7 @@ export const INITIAL_STUDENTS: Student[] = [
       { id: 'hist-2', date: '01/11/2026', action: 'Recalibragem semanal com avanço para Apoio Moderado', author: 'Sistema IA' },
       { id: 'hist-3', date: '28/10/2026', action: 'Atualização das estratégias validadas no PEI', author: 'Profa. Mariana' },
     ],
-    pendingFeedbackActivityId: 'act-sample-1' // Trava de dependência de feedback ativa para demonstração da regra de negócio!
+    pendingFeedbackActivityId: 'act-sample-1'
   },
   {
     id: 'student-2',
@@ -117,6 +119,8 @@ export const INITIAL_STUDENTS: Student[] = [
     cpf: '678.901.234-55',
     age: 8,
     className: '3º Ano A - Fundamental I',
+    shift: 'Manhã',
+    room: 'Sala 102 - Bloco A',
     skills: [
       'Vocabulário oral rico e expressivo',
       'Grande capacidade de empatia e cooperação em grupo',
@@ -176,6 +180,8 @@ export const INITIAL_STUDENTS: Student[] = [
     cpf: '789.012.345-66',
     age: 9,
     className: '4º Ano A - Fundamental I',
+    shift: 'Manhã',
+    room: 'Sala 204 - Bloco B',
     skills: [
       'Raciocínio lógico dedutivo rápido',
       'Facilidade com leitura autônoma e gráficos',
@@ -218,6 +224,106 @@ export const INITIAL_STUDENTS: Student[] = [
     },
     recentHistory: [
       { id: 'hist-g1', date: '02/11/2026', action: 'Conclusão autônoma do módulo de frações com 95% de acerto', author: 'Prof. Carlos' }
+    ],
+    pendingFeedbackActivityId: null
+  },
+  {
+    id: 'student-4',
+    name: 'Clara Mendes de Alencar',
+    cpf: '890.123.456-77',
+    age: 8,
+    className: '3º Ano B - Fundamental I',
+    shift: 'Tarde',
+    room: 'Sala 105 - Bloco A',
+    skills: [
+      'Desenho detalhado e expressão artística',
+      'Empatia e atenção às emoções dos colegas',
+      'Ritmo e facilidade com instrumentos de percussão'
+    ],
+    difficulties: [
+      'Dificuldade de concentração em cálculo com mais de uma etapa',
+      'Timidez em apresentações orais para grandes públicos'
+    ],
+    interests: ['Pintura aquarela', 'Jardinagem escolar', 'Histórias de aventura'],
+    learningLevel: 'Apoio Moderado',
+    pedagogicalGoals: [
+      'Associar noções fracionárias com materiais visuais e culinária lúdica',
+      'Incentivar pequenas falas em rodas de conversa estruturadas'
+    ],
+    validatedStrategies: [
+      'Cartazes pictográficos de rotina diária',
+      'Uso de massinha e ábaco colorido para contagem'
+    ],
+    failedStrategies: [
+      'Exercícios repetitivos em folhas monocromáticas sem ilustração'
+    ],
+    axesScores: {
+      cognicao: 76,
+      linguagem: 80,
+      matematica: 66,
+      motricidade: 84,
+      funcoesExecutivas: 70,
+      aspectosSocioemocionais: 88,
+    },
+    pei: {
+      active: true,
+      term: '2º Semestre Letivo - 2026',
+      lastUpdated: '18/10/2026',
+      goals: ['Meta PEI-C01: Desenvolvimento do raciocínio lógico-matemático com suporte pictórico.'],
+      curricularAdaptations: ['Atividades com suporte visual e cores contrastantes.']
+    },
+    recentHistory: [
+      { id: 'hist-c1', date: '01/11/2026', action: 'Atividade de artes e linguagem aplicada com sucesso', author: 'Prof. Carlos' }
+    ],
+    pendingFeedbackActivityId: null
+  },
+  {
+    id: 'student-5',
+    name: 'Thiago Ribeiro da Costa',
+    cpf: '901.234.567-88',
+    age: 7,
+    className: '2º Ano C - Fundamental I',
+    shift: 'Manhã',
+    room: 'Sala 101 - Bloco A',
+    skills: [
+      'Construção com blocos e Lego',
+      'Curiosidade científica e interesse em experimentos práticos',
+      'Agilidade em jogos de memorização rápida'
+    ],
+    difficulties: [
+      'Manter postura sentada por longos períodos em aulas expositivas',
+      'Desorganização dos materiais escolares sem checklist'
+    ],
+    interests: ['Engenhocas', 'Robótica', 'Insetos e biologia'],
+    learningLevel: 'Apoio Moderado',
+    pedagogicalGoals: [
+      'Organizar materiais com auxílio de etiquetas visuais',
+      'Consolidar leitura fonológica em textos curtos'
+    ],
+    validatedStrategies: [
+      'Pausas de descompressão ativa de 2 minutos',
+      'Checklist de mochila com símbolos plastificados'
+    ],
+    failedStrategies: [
+      'Permanência estática superior a 25 minutos seguidos'
+    ],
+    axesScores: {
+      cognicao: 85,
+      linguagem: 74,
+      matematica: 82,
+      motricidade: 90,
+      funcoesExecutivas: 60,
+      aspectosSocioemocionais: 78,
+    },
+    pei: {
+      active: false,
+      term: 'Não aplicável',
+      lastUpdated: '15/09/2026',
+      goals: [],
+      curricularAdaptations: []
+    },
+    recentHistory: [
+      { id: 'hist-t1', date: '03/11/2026', action: 'Adaptação de rotina em sala de aula', author: 'Profa. Mariana' }
     ],
     pendingFeedbackActivityId: null
   }

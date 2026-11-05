@@ -85,6 +85,8 @@ export interface Student {
   cpf: string;
   age: number;
   className: string;
+  shift?: 'Manhã' | 'Tarde' | 'Integral';
+  room?: string;
   skills: string[];
   difficulties: string[];
   interests: string[];
