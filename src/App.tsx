@@ -27,6 +27,7 @@ import { ContinuousEvaluationView } from './components/ContinuousEvaluationView'
 import { ConsolidatedReportsView } from './components/ConsolidatedReportsView';
 import { PeiManagementModal } from './components/PeiManagementModal';
 import { ParentsPortal } from './components/ParentsPortal';
+import { MySQLWorkbenchModal } from './components/MySQLWorkbenchModal';
 
 export default function App() {
   // State principal da aplicação
@@ -65,6 +66,39 @@ export default function App() {
   const [activityForFeedback, setActivityForFeedback] = useState<ActivityItem | null>(null);
 
   const [isPeiModalOpen, setIsPeiModalOpen] = useState(false);
+  const [isMySQLModalOpen, setIsMySQLModalOpen] = useState(false);
+
+  // Sincroniza dados com o backend/MySQL na inicialização
+  useEffect(() => {
+    fetch('/api/students')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setStudents(data);
+          setSelectedStudent(data[0]);
+        }
+      })
+      .catch((err) => console.log('[Sync] Usando cache local de estudantes:', err));
+
+    fetch('/api/activities')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setActivities(data);
+          setCurrentActivity(data[0] || null);
+        }
+      })
+      .catch((err) => console.log('[Sync] Usando cache local de atividades:', err));
+
+    fetch('/api/classes')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setClasses(data);
+        }
+      })
+      .catch((err) => console.log('[Sync] Usando cache local de turmas:', err));
+  }, []);
 
   // Configurações de Acessibilidade WCAG (RNF04)
   const [accessibility, setAccessibility] = useState<AccessibilitySettings>({
@@ -155,6 +189,11 @@ export default function App() {
   const handleSaveStudent = (newStudent: Student) => {
     setStudents((prev) => [newStudent, ...prev]);
     setSelectedStudent(newStudent);
+    fetch('/api/students', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newStudent),
+    }).catch((err) => console.log('[Sync Error]', err));
   };
 
   // Edição de Estudantes (RF06)
@@ -170,6 +209,11 @@ export default function App() {
     if (selectedStudent.id === updatedStudent.id) {
       setSelectedStudent(updatedStudent);
     }
+    fetch('/api/students', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedStudent),
+    }).catch((err) => console.log('[Sync Error]', err));
   };
 
   // Observação em Linguagem Natural (RF10) concluída pela IA
@@ -177,6 +221,11 @@ export default function App() {
     setActivities((prev) => [activity, ...prev]);
     setCurrentActivity(activity);
     setActiveTab('activities');
+    fetch('/api/activities', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(activity),
+    }).catch((err) => console.log('[Sync Error]', err));
   };
 
   // Feedback de Desempenho e Trava de Bloqueio (RF12)
@@ -194,6 +243,12 @@ export default function App() {
           : a
       )
     );
+
+    fetch(`/api/activities/${activityId}/feedback`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(feedback),
+    }).catch((err) => console.log('[Sync Error]', err));
 
     // Se a atividade correspondia à trava do estudante, libera a trava!
     setStudents((prev) =>
@@ -326,6 +381,7 @@ export default function App() {
         activeTab={activeTab}
         isSidebarOpen={isSidebarOpen}
         onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+        onOpenMySQLModal={() => setIsMySQLModalOpen(true)}
       />
 
       {/* Barra Lateral Retrátil com todas as opções do sistema */}
@@ -341,6 +397,7 @@ export default function App() {
           setAuthModalMode('login');
           setIsAuthModalOpen(true);
         }}
+        onOpenMySQLModal={() => setIsMySQLModalOpen(true)}
       />
 
       {/* Conteúdo Principal da Aplicação */}
@@ -543,6 +600,11 @@ export default function App() {
           onUpdatePei={handleUpdatePei}
         />
       )}
+
+      <MySQLWorkbenchModal
+        isOpen={isMySQLModalOpen}
+        onClose={() => setIsMySQLModalOpen(false)}
+      />
     </div>
   );
 }

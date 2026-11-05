@@ -11,7 +11,8 @@ import {
   ShieldCheck, 
   UserCheck,
   ChevronRight,
-  GraduationCap
+  GraduationCap,
+  Database
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -23,6 +24,7 @@ interface SidebarProps {
   currentUser: User | null;
   onLogout: () => void;
   onOpenLogin: () => void;
+  onOpenMySQLModal: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -34,6 +36,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   currentUser,
   onLogout,
   onOpenLogin,
+  onOpenMySQLModal,
 }) => {
   const isParent = currentUser?.role === 'pais';
 
@@ -224,6 +227,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>LGPD · DUA · Acessibilidade WCAG</span>
           </div>
+
+          <button
+            onClick={() => {
+              onOpenMySQLModal();
+              onClose();
+            }}
+            className="w-full py-2 px-3 rounded-xl border border-blue-200 bg-blue-50/80 hover:bg-blue-100 text-blue-900 text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-2xs"
+            title="Abrir arquitetura e script SQL para MySQL Workbench"
+          >
+            <Database className="w-4 h-4 text-blue-600" />
+            <span>Banco MySQL Workbench</span>
+          </button>
 
           {currentUser ? (
             <button

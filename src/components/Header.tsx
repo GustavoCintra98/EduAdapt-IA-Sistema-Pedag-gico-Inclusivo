@@ -6,7 +6,8 @@ import {
   LogOut, 
   BookOpen,
   Menu,
-  X
+  X,
+  Database
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -18,6 +19,7 @@ interface HeaderProps {
   activeTab: string;
   isSidebarOpen: boolean;
   onToggleSidebar: () => void;
+  onOpenMySQLModal: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -29,6 +31,7 @@ export const Header: React.FC<HeaderProps> = ({
   activeTab,
   isSidebarOpen,
   onToggleSidebar,
+  onOpenMySQLModal,
 }) => {
   const toggleContrast = () => {
     setAccessibility((prev) => ({
@@ -148,6 +151,17 @@ export const Header: React.FC<HeaderProps> = ({
                 <Sun className="w-3.5 h-3.5" />
               </button>
             </div>
+
+            {/* Botão de Acesso ao Banco MySQL Workbench */}
+            <button
+              onClick={onOpenMySQLModal}
+              className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg border border-blue-200 bg-blue-50/80 hover:bg-blue-100/90 text-blue-900 transition-colors flex items-center gap-1.5 text-xs font-bold shadow-2xs"
+              title="Visualizar estrutura do banco de dados relacional para MySQL Workbench e conexão segura"
+              aria-label="Abrir modal do banco de dados MySQL Workbench"
+            >
+              <Database className="w-3.5 h-3.5 text-blue-600" />
+              <span className="hidden sm:inline">MySQL Workbench</span>
+            </button>
 
             {/* Usuário / Botão de Login */}
             {currentUser ? (

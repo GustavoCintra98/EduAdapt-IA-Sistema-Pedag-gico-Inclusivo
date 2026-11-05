@@ -3,6 +3,17 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, ThinkingLevel } from '@google/genai';
+import fs from 'fs';
+import { 
+  testDbConnection, 
+  getCurrentDbStatus, 
+  getAllStudents, 
+  saveOrUpdateStudent, 
+  getAllActivities, 
+  saveActivity, 
+  saveFeedback, 
+  getAllClasses 
+} from './src/db/mysql.ts';
 
 dotenv.config();
 
@@ -488,6 +499,92 @@ function generateLocalFallbackReport(student: any, recipientType: string, period
   };
 }
 
+// ============================================================================
+// ROTAS DE INTEGRAÇÃO COM MYSQL WORKBENCH / BANCO RELACIONAL
+// ============================================================================
+
+// Status da Conexão MySQL (RF Seguro)
+app.get('/api/db/status', (_req, res) => {
+  return res.json(getCurrentDbStatus());
+});
+
+// Testar Conexão Ativa
+app.post('/api/db/test', async (_req, res) => {
+  const status = await testDbConnection();
+  return res.json(status);
+});
+
+// Download do Script DDL/DML para MySQL Workbench
+app.get('/api/db/download-sql', (_req, res) => {
+  const sqlPath = path.join(__dirname, 'database', 'eduadapt_mysql_workbench.sql');
+  if (fs.existsSync(sqlPath)) {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="eduadapt_mysql_workbench.sql"');
+    return res.sendFile(sqlPath);
+  }
+  return res.status(404).json({ error: 'Arquivo SQL do MySQL Workbench não encontrado.' });
+});
+
+// Obter Estudantes (MySQL ou Cache Seguro)
+app.get('/api/students', async (_req, res) => {
+  try {
+    const list = await getAllStudents();
+    return res.json(list);
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// Salvar / Atualizar Estudante
+app.post('/api/students', async (req, res) => {
+  try {
+    const saved = await saveOrUpdateStudent(req.body);
+    return res.json(saved);
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// Obter Atividades
+app.get('/api/activities', async (_req, res) => {
+  try {
+    const list = await getAllActivities();
+    return res.json(list);
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// Criar Atividade
+app.post('/api/activities', async (req, res) => {
+  try {
+    const saved = await saveActivity(req.body);
+    return res.json(saved);
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// Registrar Feedback de Atividade (RF12)
+app.post('/api/activities/:id/feedback', async (req, res) => {
+  try {
+    const success = await saveFeedback(req.params.id, req.body);
+    return res.json({ success });
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// Obter Turmas
+app.get('/api/classes', async (_req, res) => {
+  try {
+    const list = await getAllClasses();
+    return res.json(list);
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 // In dev mode, mount Vite middleware. In prod, serve static dist.
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
@@ -506,6 +603,13 @@ async function startServer() {
 
   app.listen(Number(port), '0.0.0.0', () => {
     console.log(`EduAdapt IA Server running on port ${port}`);
+    testDbConnection()
+      .then((status) => {
+        console.log(`[MySQL Workbench / DB Integration] ${status.message}`);
+      })
+      .catch((err) => {
+        console.warn(`[MySQL Workbench / DB Integration] Modo local ativado: ${err?.message}`);
+      });
   });
 }
 
